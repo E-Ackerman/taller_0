@@ -1,39 +1,98 @@
 public class taller_0 {
 	
-	public static void leerClientes(String []NOMBRE, String []APELLIDO, String []RUT, String []CONTRASEÑA, int []SALDO) throws Exception{
-		BufferedReader arch1=new BufferedReader(new FileReader("clientes.txt"));
-		String linea;
-		int i = 0;
-		while ((linea = arch1.readLine()) !=null) {
-			String[] elementos = linea.split(",");
+	public static void leerClientes(String []nombre, String []apellido, String []rut, String []contraseña, int []saldo) throws Exception
+    {
+	BufferedReader arch1=new BufferedReader(new FileReader("clientes.txt"));
+	String linea;
+	int i = 0;
+	while ((linea = arch1.readLine()) !=null) {
+            String[] elementos = linea.split(",");
 			
-			NOMBRE[i] = elementos[0];
-			APELLIDO[i] = elementos[1];
-			RUT[i] = elementos[2];
-			CONTRASEÑA[i] = elementos[3];
-			SALDO[i] = Integer.parseInt(elementos[4]);
-			i++;
+            nombre[i] = elementos[0];
+            apellido[i] = elementos[1];
+            rut[i] = elementos[2];
+            contraseña[i] = elementos[3];
+            saldo[i] = Integer.parseInt(elementos[4]);
+            i++;
 			
-		}
-		arch1.close();
 	}
+	arch1.close();
+    }
 	
-	public static void leerStatus(String[] RUT, String[] ESTADO) throws Exception{
-		BufferedReader arch2=new BufferedReader(new FileReader("status.txt"));
-		String linea;
-		int i = 0;
-		while ((linea = arch2.readLine()) !=null) {
-			String[] elementos = linea.split(",");
-			RUT[i]= elementos[0];
-			ESTADO[i] = elementos[1];
-			i++;
-		}	
-		arch2.close();
-	}
-	
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+    public static void leerStatus(String[] rut, String[] estado) throws Exception{
+	BufferedReader arch2=new BufferedReader(new FileReader("status.txt"));
+	String linea;
+	int i = 0;
+	while ((linea = arch2.readLine()) !=null) {
+            String[] elementos = linea.split(",");
+            rut[i]= elementos[0];
+            estado[i] = elementos[1];
+            i++;
+        }	
+	arch2.close();
+    }
+        
+    public static void leerPeliculas(String[] pelicula, String[] estreno, int[] recaudacion,String[][] horario) throws FileNotFoundException
+    {
+        Scanner scanner = new Scanner(new File("peliculas.txt"));
+            
+        int i=0;
+        while (scanner.hasNextLine()) 
+        {
+            String linea = scanner.nextLine();
+            String[] partes = linea.split(",");
+            pelicula[i] = partes[0];
+            estreno[i] = partes[1];
+            recaudacion[i] = Integer.valueOf(partes[2]);
+            int f = 0;
+            for (int a=3; a<partes.length;a++) // recorre la ultima parte de la linea referente a la sala y el horario
+            {
+                if(!partes[a].equals("M") && !partes[a].equals("T")) 
+                {
+                    f = Integer.valueOf(partes[a])-1; // la primera entrada indica el numero de la sala, la cual para ubicarla en la matriz se le resta 1
+                }
+                else // pasa a la segunda entrada de texto que indica si es mañana o tarde
+                {
+                    if (partes[a].equals("M")) 
+                    {
+                        horario[f][0] = pelicula[i]; //aqui se guarda la pelicula en la sala predeterminada y con el horario de mañana 
+                    }
+                    else 
+                    {
+                        horario[f][1] = pelicula[i]; //aqui se guarda la pelicula en la sala predeterminada y con el horario de tarde 
+                    }
+                } 
+            }
+                
+            i++;    
+        }
+        scanner.close();
+    }
 
-	}
+
+    public static void main(String[] args) throws Exception 
+    {
+        String []nombre= new String[1000];
+        String []apellido = new String[1000];
+        String []rut= new String[1000];
+        String []contraseña= new String[1000];
+        int []saldo = new int[1000];
+        
+        leerClientes(nombre,apellido,rut,contraseña,saldo);
+        
+        String[] rutStatus = new String[1000];
+        String[] estado = new String[1000];
+        
+        leerStatus(rutStatus,estado);
+        
+        String[] pelicula = new String[1000];
+        String[] estreno= new String[1000]; 
+        int[] recaudacion = new int[1000];
+        String[][] horario = new String[3][2]; // 3 salas y 2 funciones por sala(mañana y tarde)
+        
+        leerPeliculas(pelicula,estreno,recaudacion,horario);
+        
+        
+    }
 
 }
