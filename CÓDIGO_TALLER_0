@@ -1,7 +1,21 @@
 public class taller_0 {
 	
-	public static void LeerClientes(){
-	
+	public static void leerClientes(String []NOMBRE, String []APELLIDO, String []RUT, String []CONTRASEÑA, int []SALDO) throws Exception{
+		BufferedReader arch1=new BufferedReader(new FileReader("datos.txt"));
+		String linea;
+		int i = 0;
+		while ((linea = arch1.readLine()) !=null) {
+			String[] elementos = linea.split(",");
+			
+			NOMBRE[i] = elementos[0];
+			APELLIDO[i] = elementos[1];
+			RUT[i] = elementos[2];
+			CONTRASEÑA[i] = elementos[3];
+			SALDO[i] = Integer.parseInt(elementos[4]);
+			i++;
+			
+		}
+		arch1.close();
 	}
 	
 	public static void main(String[] args) {
