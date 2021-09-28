@@ -1,7 +1,7 @@
 public class taller_0 {
 	
 	public static void leerClientes(String []NOMBRE, String []APELLIDO, String []RUT, String []CONTRASEÑA, int []SALDO) throws Exception{
-		BufferedReader arch1=new BufferedReader(new FileReader("datos.txt"));
+		BufferedReader arch1=new BufferedReader(new FileReader("clientes.txt"));
 		String linea;
 		int i = 0;
 		while ((linea = arch1.readLine()) !=null) {
@@ -16,6 +16,19 @@ public class taller_0 {
 			
 		}
 		arch1.close();
+	}
+	
+	public static void leerStatus(String[] RUT, String[] ESTADO) throws Exception{
+		BufferedReader arch2=new BufferedReader(new FileReader("status.txt"));
+		String linea;
+		int i = 0;
+		while ((linea = arch2.readLine()) !=null) {
+			String[] elementos = linea.split(",");
+			RUT[i]= elementos[0];
+			ESTADO[i] = elementos[1];
+			i++;
+		}	
+		arch2.close();
 	}
 	
 	public static void main(String[] args) {
