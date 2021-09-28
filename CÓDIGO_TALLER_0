@@ -1,5 +1,9 @@
 public class taller_0 {
-
+	
+	public static void LeerClientes(){
+	
+	}
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
