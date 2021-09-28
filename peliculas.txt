@@ -1,4 +1,3 @@
-Rápidos y Furiosos,estreno,1500000,2,M,2,T,1,T
-El conjuro 3,liberada,2000000,1,M
-Harry Potter,estreno,3000000,2,M,1,T
+Rápidos y Furiosos,estreno,1500000,2,M,1,T
+El conjuro 3,liberada,2000000,1,M,3T
 Mulan,liberada,1200000,2,T
