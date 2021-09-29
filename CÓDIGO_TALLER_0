@@ -1,6 +1,6 @@
 public class taller_0 {
 	
-	public static void leerClientes(String []nombre, String []apellido, String []rut, String []contraseña, int []saldo) throws Exception
+    public static void leerClientes(String []nombre, String []apellido, String []rut, String []contraseña, int []saldo) throws Exception
     {
 	BufferedReader arch1=new BufferedReader(new FileReader("clientes.txt"));
 	String linea;
@@ -10,7 +10,7 @@ public class taller_0 {
 			
             nombre[i] = elementos[0];
             apellido[i] = elementos[1];
-            rut[i] = elementos[2];
+            rut[i] = listatoString(sinSignos(elementos[2]));
             contraseña[i] = elementos[3];
             saldo[i] = Integer.parseInt(elementos[4]);
             i++;
@@ -25,7 +25,7 @@ public class taller_0 {
 	int i = 0;
 	while ((linea = arch2.readLine()) !=null) {
             String[] elementos = linea.split(",");
-            rut[i]= elementos[0];
+            rut[i]= listatoString(sinSignos(elementos[0]));
             estado[i] = elementos[1];
             i++;
         }	
@@ -68,7 +68,114 @@ public class taller_0 {
         }
         scanner.close();
     }
+    
+    public static boolean verificarRut(String rut) 
+    {
+        String[] lista = sinSignos(rut);
+        
+        int cte = 2;
+        int suma=0;
+        int n=2;
+        
+        if (lista[lista.length-1] == null) 
+        {
+            n = 3;
+        }
+         
+        for (int a=lista.length-n;a>=0;a--) 
+        {
+            suma += (Integer.valueOf(lista[a]) * cte);
+            cte +=1;
+            if (cte == 8)
+            {
+                cte = 2;
+            }
+        }
+        
+        int resul = 11 - (suma % 11);
+        String DV = lista[lista.length - (n-1)].toUpperCase();
+        boolean bool= false;
+        
+        if (resul == 11 && DV.equals("0")) 
+        {
+            bool = true;
+        }
+        else if (resul == 10 && DV.equals("K")) 
+        {
+            bool = true;
+        }
+        else if ((resul >= 1 && resul <= 9 ) && ((String.valueOf(resul)).equals(lista[lista.length-(n-1)])) ) 
+        {
+            bool = true;
+        }        
+        return bool;
+   
+    }
 
+    public static String[] sinSignos(String rut) 
+    {
+        String[] partes = rut.split("");
+        String[] lista = new String[9];
+        
+        int j=0;
+        for (int i=0;i<partes.length;i++) 
+        {
+            if(!(partes[i].equals(".") || partes[i].equals("-")) && partes[i] != null) 
+            {
+                lista[j] = partes[i];
+                j++;
+            }
+        }
+        return lista;
+    }
+    
+    public static String listatoString(String[] lista) 
+    {
+        String string = "";
+        for (int a=0; a<lista.length;a++) 
+        {
+            if (lista[a] != null) 
+            {
+               string += lista[a].toUpperCase(); 
+            }
+        }
+        
+        return string;
+    }
+
+    public static void registrarCliente(String []nombre,String []apellido, String []rut, String []contraseña, int []saldo, String nombreI, String apellidoI, String rutI, String contraseñaI) 
+    {
+        for (int a=0; a<nombre.length;a++) 
+        {
+            if (nombre[a] == null) 
+            {
+                nombre[a] = nombreI;
+                apellido[a] = apellidoI;
+                rut[a] = rutI;
+                contraseña[a] = contraseñaI;
+                saldo[a] = 0;
+                break;
+            }
+        }
+    }
+    
+    public static boolean verificarDatos(String []rut,String []contraseña, String rutI, String contra) 
+    {
+        for (int a=0; a<rut.length;a++) 
+        {
+            if(rut[a] != null)
+            {
+                if(rutI.equals(rut[a]) && contra.equals(contraseña[a])) 
+                {
+                    return true;
+                }
+            }    
+        }
+        
+        return false;
+    }
+    
+    
 
     public static void main(String[] args) throws Exception 
     {
@@ -93,6 +200,127 @@ public class taller_0 {
         leerPeliculas(pelicula,estreno,recaudacion,horario);
         
         
-    }
+        
+        Scanner read = new Scanner(System.in);
+        System.out.print("Desea cerrar el sistema? (SI) (NO): ");
+        String respuesta = "";
+        respuesta = read.next().toUpperCase();
+        
+        while (!respuesta.equals("SI") && !respuesta.equals("NO")) 
+        {
+            System.out.println("\n--- El texto ingresado es incorrecto ---");
+            System.out.print("\nDesea cerrar el sistema? (SI) (NO): ");
+            respuesta = read.next().toUpperCase();
+        }
+        
+        while (respuesta.equals("NO")) 
+        {
+            
+            String rutInicio = "";
+            String contra = "";
+            System.out.println("\nMENU DE INICIO DE SESION\n");
+            System.out.print("Desea: \n1) Iniciar sesion \n2) Registrarse\n");
+            System.out.print("\nIngrese una opción: ");
+            String opcion = read.next();
+    
+            while(!opcion.equals("1") && !opcion.equals("2")) 
+            {
+                System.out.println("--- La opcion ingresada no existe ---");
+                System.out.print("Ingrese una opcion: ");
+                opcion = read.next();
+            }
+            System.out.println();
 
+            if (opcion.equals("1")) 
+            {
+                System.out.println("  INICIO DE SESION");
+                System.out.print("\nIngrese su rut: ");
+                rutInicio = listatoString(sinSignos(read.next()));
+                System.out.print("Ingrese su contraseña: ");
+                contra = read.next();
+            
+                if(!rutInicio.equals("ADMIN") && !contra.equals("ADMIN"))
+                {    
+                    while(!verificarRut(rutInicio) || !verificarDatos(rut,contraseña,rutInicio,contra)) 
+                    {
+                        System.out.println("\n--- Rut y/o contraseña incorrectos ---");
+                        System.out.print("\nIngrese su rut: ");
+                        rutInicio = listatoString(sinSignos(read.next()));
+                        System.out.print("Ingrese su contraseña: ");
+                        contra = read.next();
+                    }
+                }
+            }
+        
+            else 
+            {
+
+                System.out.println("   REGISTRO");                
+                System.out.print("\nIngrese su nombre: ");
+                String nombreRegistro = read.next();
+                System.out.print("Ingrese su apellido: ");
+                String apellidoRegistro = read.next();
+                System.out.print("Ingrese su rut: ");
+                String rutRegistro = listatoString(sinSignos(read.next()));
+                while (!verificarRut(rutRegistro)) 
+                {
+                    System.out.println("--- Ingrese un rut correcto ---");
+                    System.out.print("Ingrese su rut: ");
+                    rutRegistro = listatoString(sinSignos(read.next()));
+                }
+                System.out.print("Ingrese su nueva contraseña: ");
+                String contra1 = read.next();
+
+                registrarCliente(nombre,apellido,rut,contraseña,saldo, nombreRegistro,apellidoRegistro,rutRegistro,contra1);
+                
+                System.out.println("\n  INICIO DE SESION");
+                System.out.print("\nIngrese su rut: ");
+                rutInicio = listatoString(sinSignos(read.next()));
+                System.out.print("Ingrese su contraseña: ");
+                contra = read.next();
+
+                if(!rutInicio.equals("ADMIN") && !contra.equals("ADMIN"))
+                {    
+                    while(!verificarRut(rutInicio) || !verificarDatos(rut,contraseña,rutInicio,contra)) 
+                    {
+                        System.out.println("\n--- Rut y/o contraseña incorrectos ---");
+                        System.out.print("\nIngrese su rut: ");
+                        rutInicio = listatoString(sinSignos(read.next()));
+                        System.out.print("Ingrese su contraseña: ");
+                        contra = read.next();
+                    }
+                }
+
+            }
+            
+            // MENU CLIENTE
+            
+            if (!rutInicio.equals("ADMIN") && !contra.equals("ADMIN")) 
+            {
+                
+            }
+            
+            // MENU ADMIN
+            
+            else 
+            {
+                
+            }
+            
+            
+            
+            System.out.print("Desea cerrar el sistema? (SI) (NO): ");
+            respuesta = read.next().toUpperCase();
+        
+            while (!respuesta.equals("SI") && !respuesta.equals("NO")) 
+            {
+                System.out.println("\n--- El texto ingresado es incorrecto ---");
+                System.out.print("\nDesea cerrar el sistema? (SI) (NO): ");
+                respuesta = read.next().toUpperCase();
+            }
+            
+        } // FIN DEL CIERRE DE SISTEMA
+        
+    }
+    
 }
