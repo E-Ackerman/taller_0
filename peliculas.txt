@@ -1,3 +1,3 @@
 Rápidos y Furiosos,estreno,1500000,2,M,1,T
-El conjuro 3,liberada,2000000,1,M,3T
+El conjuro 3,liberada,2000000,1,M,3,T
 Mulan,liberada,1200000,2,T
