@@ -175,10 +175,161 @@ public class taller_0 {
         return false;
     }
     
+    public static String desplegarHorario (String pelicula, String[][] horario) 
+    {
+        String salida ="";
+        for(int a=0;a<3;a++) 
+        {
+            for (int b=0;b<2;b++) 
+            {
+                if (pelicula.equals(horario[a][b])) 
+                {
+                    if (b == 0) 
+                    {
+                        salida += " - Sala " + (a+1) + " en la mañana"; 
+                    }
+                    else 
+                    {
+                        salida += " - Sala " + (a+1) + " en la tarde"; 
+                    }    
+                }    
+            }
+        }
+        
+        return salida;
+    }
     
+    public static String desplegarCartelera(String[][] horario) 
+    {
+        String salida = "";
+        for (int a=0; a<3;a++) 
+        {
+            for (int b=0;b<2;b++) 
+            {
+                if (horario[a][b] != null) 
+                {
+                    if (b==0) 
+                    {
+                        salida += "Sala " + (a+1) + ": Pelicula " + horario[a][b] + " en la mañana\n";
+                    }
+                    else 
+                    {
+                        salida += "Sala " + (a+1) + ": Pelicula " + horario[a][b] + " en la tarde\n";
+                    }
+                }    
+            }
+        }
+        
+        return salida;
+    }
+    
+    public static int[][] crearMatriz() 
+    {
+        int[][] matriz = new int[10][30];
+        for(int a=0;a<10;a++) 
+        {
+            for(int b=0;b<30;b++) 
+            {
+                if ((b>4 && b<25) || a>3) 
+                {
+                    matriz[a][b] = 1;
+                }
+            }
+        }
+        
+        return matriz;
+    }
+    
+    public static String desplegarAsientos(int[][] matriz, String[] letras) 
+    {
+        String salida = "Asientos disponibles: ";
+        for (int a=0;a<10;a++) 
+        {
+            for(int b=0;b<30;b++) 
+            {
+                if(matriz[a][b] !=0 && matriz[a][b] != -1) 
+                {
+                    salida += "  " + letras[a] +"-" + (b+1);
+                    
+                }
+            }
+        }
+        return salida;
+    }
+    
+    public static int[][] seleccionar(int[][] sala1M,int[][] sala1T ,int[][] sala2M, int[][] sala2T, int[][] sala3M, int[][] sala3T, int sala, String hora, String[] letras) 
+    {
+        if(sala == 1 && hora.equals("MAÑANA")) 
+        {
+            System.out.println(desplegarAsientos(sala1M,letras));
+            return sala1M;
+        }
+        else if(sala == 1 && hora.equals("TARDE")) 
+        {
+            System.out.println(desplegarAsientos(sala1T,letras));
+            return sala1T;
+        }
+        else if(sala == 2 && hora.equals("MAÑANA")) 
+        {
+            System.out.println(desplegarAsientos(sala2M,letras));
+            return sala2M;
+        }
+        else if(sala == 2 && hora.equals("TARDE")) 
+        {
+            System.out.println(desplegarAsientos(sala2T,letras));
+            return sala2T;
+        }
+        else if(sala == 3 && hora.equals("MAÑANA")) 
+        {
+            System.out.println(desplegarAsientos(sala3M,letras));
+            return sala3M;
+        }
+        else 
+        {
+            System.out.println(desplegarAsientos(sala3T,letras));
+            return sala3T;
+        }           
+    }
+    
+    public static void comprarEntrada(String entrada, int[][] salaSelec, String[] letras) 
+    {
+        String[] lista = sinSignos(entrada);
+        int fila = 0;
+        String columna = "";
+        for (int i=0; i<3;i++) 
+        {
+            if (lista[i] != null) 
+            {
+                for (int f=0; f<10;f++) 
+                {
+                    if (lista[i].equals(letras[f])) 
+                    {
+                        fila = f;
+                        break;
+                    }
+                    else 
+                    {
+                        columna += lista[i];
+                        break;
+                    }
+                }
+            }
+        }
+        int c= Integer.valueOf(columna) - 1;
+        
+        for(int a=0;a<10;a++) 
+        {
+            for(int b=0;b<30;b++) 
+            {
+                salaSelec[fila][c] = -1;
+            }
+        }
+    }
 
     public static void main(String[] args) throws Exception 
     {
+        Scanner read = new Scanner(System.in);
+        
         String []nombre= new String[1000];
         String []apellido = new String[1000];
         String []rut= new String[1000];
@@ -199,9 +350,15 @@ public class taller_0 {
         
         leerPeliculas(pelicula,estreno,recaudacion,horario);
         
+        String[] letras = new String[10]; letras[0] = "A"; letras[1] = "B"; letras[2] = "C"; letras[3] = "D"; letras[4] = "E"; letras[5] = "F"; letras[6] = "G"; letras[7] = "H"; letras[8]= "I"; letras[9] ="J";
+        int[][] sala1M = crearMatriz();
+        int[][] sala1T = crearMatriz();
+        int[][] sala2M = crearMatriz();
+        int[][] sala2T = crearMatriz();
+        int[][] sala3M = crearMatriz();
+        int[][] sala3T = crearMatriz();
         
         
-        Scanner read = new Scanner(System.in);
         System.out.print("Desea cerrar el sistema? (SI) (NO): ");
         String respuesta = "";
         respuesta = read.next().toUpperCase();
@@ -297,7 +454,68 @@ public class taller_0 {
             
             if (!rutInicio.equals("ADMIN") && !contra.equals("ADMIN")) 
             {
-                
+                String op1 ="";
+                while(!op1.equals("e")) 
+                {
+                    System.out.println("\n      MENU CLIENTE\n    \na)Comprar entrada \nb)Información usuario \nc)Devolución entrada \nd)Cartelera \ne)Cerrar sesion\n");
+                    System.out.print("Ingrese una opcion: ");
+                    op1= read.next().toLowerCase();
+                    while (!op1.equals("a") && !op1.equals("b") && !op1.equals("c") && !op1.equals("d") && !op1.equals("e")) 
+                    {
+                        System.out.println("\n--- Opción ingresada incorrecta ---");
+                        System.out.print("Ingrese una opcion: ");
+                        op1= read.next().toLowerCase();
+                    }
+
+                    if(op1.equals("a")) 
+                    {
+                        System.out.println("\n  COMPRAR ENTRADA\n");
+                        System.out.print("Ingresa el nombre de la pelicula: ");
+                        String peli = read.nextLine();
+                        peli = read.nextLine();
+                        if (!desplegarHorario(peli,horario).equals(""))
+                        {
+                            System.out.println(desplegarHorario(peli,horario));
+                            System.out.print("\nIngrese el numero de la sala: ");
+                            int sala = read.nextInt();
+                            System.out.print("Ingrese el horario de la sala, mañana o tarde: ");
+                            String hora = read.next().toUpperCase();
+                            int[][] salaSelec = seleccionar(sala1M,sala1T ,sala2M,sala2T,sala3M,sala3T,sala,hora,letras);
+                            System.out.print("Ingrese el numero de entradas a comprar: ");
+                            int cantEntradas = read.nextInt();
+                            for(int i=0;i<cantEntradas;i++) 
+                            {
+                                System.out.println("Ingrese el asiento: ");
+                                String entrada = read.next().toUpperCase();
+                                comprarEntrada(entrada,salaSelec,letras);
+                            }
+                            
+                        }
+                        else 
+                        {
+                            System.out.println("La pelicula indicada no se encuentra en la cartelera");
+                        }
+
+
+                    }
+
+                    else if(op1.equals("b")) 
+                    {
+
+                    }
+
+                    else if(op1.equals("c")) 
+                    {
+
+                    }
+
+                    else if (op1.equals("d")) 
+                    {
+                        System.out.println("\n CARTELERA\n");
+                        System.out.println(desplegarCartelera(horario));
+                    }
+
+                }    
             }
             
             // MENU ADMIN
@@ -308,7 +526,7 @@ public class taller_0 {
             }
             
             
-            
+            System.out.println("Ha cerrado sesion con exito!");
             System.out.print("Desea cerrar el sistema? (SI) (NO): ");
             respuesta = read.next().toUpperCase();
         
