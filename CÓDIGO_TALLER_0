@@ -1,6 +1,6 @@
 public class taller_0 {
 	
-    public static void leerClientes(String []nombre, String []apellido, String []rut, String []contraseña, int []saldo) throws Exception
+       public static void leerClientes(String []nombre, String []apellido, String []rut, String []contraseña, int []saldo) throws Exception
     {
 	BufferedReader arch1=new BufferedReader(new FileReader("clientes.txt"));
 	String linea;
@@ -291,7 +291,7 @@ public class taller_0 {
         }           
     }
     
-    public static void comprarEntrada(String entrada, int[][] salaSelec, String[] letras) 
+    public static boolean comprobarEntrada(String entrada, int[][] salaSelec, String[] letras) 
     {
         String[] lista = sinSignos(entrada);
         int fila = 0;
@@ -321,9 +321,113 @@ public class taller_0 {
         {
             for(int b=0;b<30;b++) 
             {
-                salaSelec[fila][c] = -1;
+                if ((salaSelec[fila][c+1] == 1 || salaSelec[fila][c+1] == 0) && (salaSelec[fila][c-1] == 1 || salaSelec[fila][c+1] == 0) && salaSelec[fila][c] == 1) 
+                {
+                    return true;
+                }
+            }
+            
+        }
+        return false;
+    }
+    
+    public static int buscarIndice(String peli, String[] peliculas) 
+    {
+        int salida = -1;
+        
+        for(int a=0;a<peliculas.length;a++) 
+        {
+            if(peli.equals(peliculas[a])) 
+            {
+                return a;
             }
         }
+        return salida;
+    }
+    
+    public static int calcularCompra(int cantEntradas, int indPeli, String[] estreno, String[] estado, int indRutPeli) 
+    {
+        int salida=0;
+        for(int a=0;a<cantEntradas;a++) 
+        {
+            if (estreno[indPeli].equals("estreno")) 
+            {
+                salida += 5500;
+            }
+            else 
+            {
+                salida += 4000;
+            }
+        }
+        
+        if (estado[indRutPeli].equals("HABILITADO")) 
+        {
+            salida = (int) (salida*0.85);
+        }
+        
+        return salida;
+    }
+    
+    public static void confirmarCompra(int[] recaudacion, int[] recaudadoDia, int[][] recaudadoXHorario, int indPeli,String peli ,String hora,String entrada,int cantEntradas, int[] saldo, int indRut, int compra,String[] nombrePelicula,String[] horarioPelicula,String[][] asientosPelicula,int indice) 
+    {
+        recaudacion[indPeli] += compra;
+        recaudadoDia[indPeli] += compra;
+        if (hora.equals("MAÑANA")) 
+        {
+            recaudadoXHorario[0][0] += compra;
+        }
+        else 
+        {
+            recaudadoXHorario[0][1] += compra;
+        }
+        saldo[indRut] -= compra;
+        
+        nombrePelicula[indice] = peli;
+        horarioPelicula[indice] = hora;
+        for(int i=0;i<cantEntradas;i++) 
+        {
+            asientosPelicula[indice][i] = entrada;
+        }    
+    }
+    
+    public static String informacionCliente(int indRut,String []nombre,String []apellido,String []rut,int []saldo,String[] nombrePelicula,String[] horarioPelicula,String[][] asientosPelicula) 
+    {
+        String salida = "\n";
+        salida += nombre[indRut] + " "+ apellido[indRut]+ " con RUT: "+rut[indRut]+ " y saldo de $"+ saldo[indRut] + "\nEntradas: ";
+        
+        for(int a=0;a<nombrePelicula.length;a++) 
+        {
+            if (nombrePelicula[a]!= null) 
+            {
+                salida += "\n- "+nombrePelicula[a] + " con horario de " + horarioPelicula[a] + " con los siguientes asientos:";
+                
+                for(int b=0;b<20;b++) 
+                {
+                    if(asientosPelicula[a][b] != null) 
+                    {
+                        salida += " "+ asientosPelicula[a][b];
+                    }
+                }
+            }
+        }
+        
+        return salida;
+    }
+    
+    public static String desplegarTaquilla(String[] pelicula,int[] recaudacion,int[] recaudadoDia,int[][] recaudadoXHorario)
+    {
+        String salida="";
+        
+        for(int a=0;a<pelicula.length;a++) 
+        {
+            if(pelicula[a] != null) 
+            {
+                salida += "\n- La pelicula "+ pelicula[a] + " tiene como monto recaudado total $"+ recaudacion[a] + " y el monto recaudado del dia es $" + recaudadoDia[a];
+            }
+        }
+        salida += "\n El monto total recaudado por la mañana es de $" + recaudadoXHorario[0][0] + " y por la tarde es de $" + recaudadoXHorario[0][1];
+        
+        return salida;
     }
 
     public static void main(String[] args) throws Exception 
@@ -357,6 +461,14 @@ public class taller_0 {
         int[][] sala2T = crearMatriz();
         int[][] sala3M = crearMatriz();
         int[][] sala3T = crearMatriz();
+        
+        String[] nombrePelicula = new String[20];
+        String[] horarioPelicula = new String[20];
+        String[][] asientosPelicula = new String[20][20];
+        int indice =0;
+        
+        int[] recaudadoDia = new int[1000];
+        int[][] recaudadoXHorario = new int[1][2];
         
         
         System.out.print("Desea cerrar el sistema? (SI) (NO): ");
@@ -449,11 +561,12 @@ public class taller_0 {
                 }
 
             }
-            
+
             // MENU CLIENTE
             
             if (!rutInicio.equals("ADMIN") && !contra.equals("ADMIN")) 
             {
+                int indRut = buscarIndice(rutInicio,rut);
                 String op1 ="";
                 while(!op1.equals("e")) 
                 {
@@ -469,10 +582,22 @@ public class taller_0 {
 
                     if(op1.equals("a")) 
                     {
+                        int indPeli =0;
+                        int indRutPeli = buscarIndice(rutInicio,rutStatus);
                         System.out.println("\n  COMPRAR ENTRADA\n");
                         System.out.print("Ingresa el nombre de la pelicula: ");
                         String peli = read.nextLine();
                         peli = read.nextLine();
+                        
+                        while (buscarIndice(peli,pelicula) == -1) 
+                        {
+                            System.out.println("\n--- El nombre ingresado no se encuentra en cartelera ---\n");
+                            System.out.print("Ingresa el nombre de la pelicula: ");
+                            peli = read.nextLine();
+                        }
+                        indPeli = buscarIndice(peli,pelicula);
+                        
+                        
                         if (!desplegarHorario(peli,horario).equals(""))
                         {
                             System.out.println(desplegarHorario(peli,horario));
@@ -483,13 +608,74 @@ public class taller_0 {
                             int[][] salaSelec = seleccionar(sala1M,sala1T ,sala2M,sala2T,sala3M,sala3T,sala,hora,letras);
                             System.out.print("Ingrese el numero de entradas a comprar: ");
                             int cantEntradas = read.nextInt();
+                            String entrada ="";
                             for(int i=0;i<cantEntradas;i++) 
                             {
-                                System.out.println("Ingrese el asiento: ");
-                                String entrada = read.next().toUpperCase();
-                                comprarEntrada(entrada,salaSelec,letras);
+                                System.out.print("Ingrese el asiento: ");
+                                entrada = read.next().toUpperCase();
+                                while (!comprobarEntrada(entrada,salaSelec,letras))
+                                {
+                                    System.out.println("\n--- No se cumple el distanciamiento social necesario (1 asiento) o se encuentra ocupado ---\n");
+                                    System.out.print("Ingrese el asiento: ");
+                                    entrada = read.next().toUpperCase();
+                                }
+                                
+                            }
+                            int compra = calcularCompra(cantEntradas,indPeli,estreno,estado,indRutPeli);
+                            System.out.println("\nTotal de la compra: $" + compra);
+                            System.out.print("\nEsta seguro de realizar la compra: ");
+                            String respuestaA = read.next().toUpperCase();
+                            
+                            while (!respuesta.equals("SI") && !respuesta.equals("NO")) 
+                            {
+                                System.out.println("\n --- Respuesta Inválida ---\n");
+                                System.out.print("\nEsta seguro de realizar la compra: ");
+                                respuestaA = read.next().toUpperCase();
                             }
                             
+                            if (respuesta.equals("SI")) 
+                            {
+                                if (saldo[indRut] < compra) 
+                                {
+                                    System.out.println("\n --- Saldo insuficiente para realizar la compra --- \n");
+                                    System.out.print("¿Desea cargar saldo a su cuenta? : ");
+                                    String respSaldo = read.next().toUpperCase();
+                                    
+                                    while (!respSaldo.equals("SI") && !respSaldo.equals("NO")) 
+                                    {
+                                        System.out.println("\n --- Respuesta Inválida ---\n");
+                                        System.out.print("¿Desea cargar saldo a su cuenta? : ");
+                                        respSaldo = read.next().toUpperCase();
+                                    }
+                                    
+                                    if(respSaldo.equals("SI")) 
+                                    {
+                                        System.out.print("Ingrese la cantidad a cargar: ");
+                                        saldo[indRut] += read.nextInt();
+                                        System.out.println("\nSaldo cargado con exito, su nuevo saldo es: $" + saldo[indRut]);
+                                        confirmarCompra(recaudacion,recaudadoDia,recaudadoXHorario,indPeli,peli ,hora,entrada,cantEntradas,saldo,indRut,compra,nombrePelicula,horarioPelicula,asientosPelicula,indice);
+                                        indice++;
+                                        System.out.println("\n --- LA COMPRA HA SIDO REALIZADA CON EXITO ---\n");
+                                    }
+                                    else 
+                                    {
+                                        System.out.println("\n --- LA COMPRA A SIDO CANCELADA --- \n    ");
+                                    }
+                                }
+                                
+                                else 
+                                {
+                                    confirmarCompra(recaudacion,recaudadoDia,recaudadoXHorario,indPeli,peli ,hora,entrada,cantEntradas,saldo,indRut,compra,nombrePelicula,horarioPelicula,asientosPelicula,indice);
+                                    indice++;
+                                    System.out.println("\n --- LA COMPRA HA SIDO REALIZADA CON EXITO ---\n");
+                                }    
+
+                            }
+                            else 
+                            {
+                                System.out.println("\n --- LA COMPRA A SIDO CANCELADA --- \n    ");
+                            }
+                                
                         }
                         else 
                         {
@@ -501,7 +687,9 @@ public class taller_0 {
 
                     else if(op1.equals("b")) 
                     {
-
+                        System.out.println("\n  INFORMACIÓN USUARIO\n");
+                        System.out.println(informacionCliente(indRut,nombre,apellido,rut,saldo,nombrePelicula,horarioPelicula,asientosPelicula));
+                        
                     }
 
                     else if(op1.equals("c")) 
@@ -522,7 +710,42 @@ public class taller_0 {
             
             else 
             {
-                
+                String op2 ="";
+                while(!op2.equals("c")) 
+                {
+                    System.out.println("\n      MENU ADMIN\n    \na)Taquilla \nb)Información cliente \nc)Cerrar sesion\n");
+                    System.out.print("Ingrese una opcion: ");
+                    op2= read.next().toLowerCase();
+                    while (!op2.equals("a") && !op2.equals("b") && !op2.equals("c")) 
+                    {
+                        System.out.println("\n--- Opción ingresada incorrecta ---");
+                        System.out.print("Ingrese una opcion: ");
+                        op2= read.next().toLowerCase();
+                    }
+                    
+                    if(op2.equals("a"))
+                    {
+                        System.out.println("\n  TAQUILLA\n");
+                        System.out.println(desplegarTaquilla(pelicula,recaudacion,recaudadoDia,recaudadoXHorario));
+                    }
+                    
+                    else if(op2.equals("b")) 
+                    {
+                        System.out.println("\n  INFORMACIÓN CLIENTE\n");
+                        System.out.print("Ingrese el rut del cliente: ");
+                        String rutCliente = listatoString(sinSignos(read.next()));
+                        
+                        while (buscarIndice(rutCliente,rut) == -1) 
+                        {
+                            System.out.println("\n--- El rut ingresado no se encuentra en los datos ---\n");
+                            System.out.print("Ingrese el rut del cliente: ");
+                            rutCliente = listatoString(sinSignos(read.next()));
+                        }
+                        int indCliente = buscarIndice(rutCliente,rut);
+                        System.out.println(informacionCliente(indCliente,nombre,apellido,rut,saldo,nombrePelicula,horarioPelicula,asientosPelicula));
+                    }
+                    
+                }    
             }
             
             
