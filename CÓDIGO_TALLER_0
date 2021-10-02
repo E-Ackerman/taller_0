@@ -1,6 +1,14 @@
 public class taller_0 {
-	
-       public static void leerClientes(String []nombre, String []apellido, String []rut, String []contraseña, int []saldo) throws Exception
+    /**
+     * Method that reads a file and saves the information in their respective lists
+     * @param nombre
+     * @param apellido
+     * @param rut
+     * @param contraseña
+     * @param saldo
+     * @throws Exception 
+     */
+    public static void leerClientes(String []nombre, String []apellido, String []rut, String []contraseña, int []saldo) throws Exception
     {
 	BufferedReader arch1=new BufferedReader(new FileReader("clientes.txt"));
 	String linea;
@@ -18,7 +26,13 @@ public class taller_0 {
 	}
 	arch1.close();
     }
-	
+
+    /**
+     * Method that reads a file and saves the information in their respective lists
+     * @param rut
+     * @param estado
+     * @throws Exception 
+     */
     public static void leerStatus(String[] rut, String[] estado) throws Exception{
 	BufferedReader arch2=new BufferedReader(new FileReader("status.txt"));
 	String linea;
@@ -31,7 +45,15 @@ public class taller_0 {
         }	
 	arch2.close();
     }
-        
+    
+    /**
+     * Method that reads a file and saves the information in their respective lists
+     * @param pelicula
+     * @param estreno
+     * @param recaudacion
+     * @param horario
+     * @throws FileNotFoundException 
+     */
     public static void leerPeliculas(String[] pelicula, String[] estreno, int[] recaudacion,String[][] horario) throws FileNotFoundException
     {
         Scanner scanner = new Scanner(new File("peliculas.txt"));
@@ -68,6 +90,12 @@ public class taller_0 {
         }
         scanner.close();
     }
+    
+    /**
+     * Method that receives a rut parameter and verifies according to an algorithm if the rut is true or not
+     * @param rut
+     * @return a variable boolean as true or false 
+     */
     
     public static boolean verificarRut(String rut) 
     {
@@ -112,6 +140,11 @@ public class taller_0 {
    
     }
 
+    /**
+     * Method for in this case to a string that is a rut leave it without the signs and periods, and leave it in a list separating each character
+     * @param rut
+     * @return a list of characters
+     */    
     public static String[] sinSignos(String rut) 
     {
         String[] partes = rut.split("");
@@ -129,6 +162,11 @@ public class taller_0 {
         return lista;
     }
     
+    /**
+     * Method to concatenate elements of a list and pass it to a single string
+     * @param lista
+     * @return a sigle string
+     */    
     public static String listatoString(String[] lista) 
     {
         String string = "";
@@ -143,6 +181,18 @@ public class taller_0 {
         return string;
     }
 
+    /**
+     * Method that the necessary parameters for registration are delivered and then the corresponding lists are entered
+     * @param nombre
+     * @param apellido
+     * @param rut
+     * @param contraseña
+     * @param saldo
+     * @param nombreI
+     * @param apellidoI
+     * @param rutI
+     * @param contraseñaI 
+     */
     public static void registrarCliente(String []nombre,String []apellido, String []rut, String []contraseña, int []saldo, String nombreI, String apellidoI, String rutI, String contraseñaI) 
     {
         for (int a=0; a<nombre.length;a++) 
@@ -159,6 +209,14 @@ public class taller_0 {
         }
     }
     
+    /**
+     * Method that verifies the data using the rut and password
+     * @param rut
+     * @param contraseña
+     * @param rutI
+     * @param contra
+     * @return 
+     */
     public static boolean verificarDatos(String []rut,String []contraseña, String rutI, String contra) 
     {
         for (int a=0; a<rut.length;a++) 
@@ -175,6 +233,12 @@ public class taller_0 {
         return false;
     }
     
+    /**
+     * Method that displays the schedule corresponding to each movie
+     * @param pelicula
+     * @param horario
+     * @return 
+     */
     public static String desplegarHorario (String pelicula, String[][] horario) 
     {
         String salida ="";
@@ -199,6 +263,11 @@ public class taller_0 {
         return salida;
     }
     
+    /**
+     * Method that displays the available billboard of the day
+     * @param horario
+     * @return 
+     */
     public static String desplegarCartelera(String[][] horario) 
     {
         String salida = "";
@@ -222,7 +291,10 @@ public class taller_0 {
         
         return salida;
     }
-    
+    /**
+     * Method that creates a matrix simulating a movie theater
+     * @return 
+     */
     public static int[][] crearMatriz() 
     {
         int[][] matriz = new int[10][30];
@@ -240,6 +312,12 @@ public class taller_0 {
         return matriz;
     }
     
+    /**
+     * Method that displays the available seats of the room indicated by parameter
+     * @param matriz
+     * @param letras
+     * @return 
+     */
     public static String desplegarAsientos(int[][] matriz, String[] letras) 
     {
         String salida = "Asientos disponibles: ";
@@ -257,6 +335,19 @@ public class taller_0 {
         return salida;
     }
     
+    /**
+     * Method that selects the room according to the information given by parameter by the client
+     * @param sala1M
+     * @param sala1T
+     * @param sala2M
+     * @param sala2T
+     * @param sala3M
+     * @param sala3T
+     * @param sala
+     * @param hora
+     * @param letras
+     * @return 
+     */
     public static int[][] seleccionar(int[][] sala1M,int[][] sala1T ,int[][] sala2M, int[][] sala2T, int[][] sala3M, int[][] sala3T, int sala, String hora, String[] letras) 
     {
         if(sala == 1 && hora.equals("MAÑANA")) 
@@ -291,6 +382,13 @@ public class taller_0 {
         }           
     }
     
+    /**
+     * Method that checks if a seat is occupied and that social distancing is respected
+     * @param entrada
+     * @param salaSelec
+     * @param letras
+     * @return 
+     */
     public static boolean comprobarEntrada(String entrada, int[][] salaSelec, String[] letras) 
     {
         String[] lista = sinSignos(entrada);
@@ -321,7 +419,7 @@ public class taller_0 {
         {
             for(int b=0;b<30;b++) 
             {
-                if ((salaSelec[fila][c+1] == 1 || salaSelec[fila][c+1] == 0) && (salaSelec[fila][c-1] == 1 || salaSelec[fila][c+1] == 0) && salaSelec[fila][c] == 1) 
+                if ((salaSelec[fila][c+1] == 1 || salaSelec[fila][c+1] == 0) && (salaSelec[fila][c-1] == 1 || salaSelec[fila][c-1] == 0) && salaSelec[fila][c] == 1) 
                 {
                     return true;
                 }
@@ -331,6 +429,12 @@ public class taller_0 {
         return false;
     }
     
+    /**
+     * Method that searches the index according to a parameter and a list
+     * @param peli
+     * @param peliculas
+     * @return 
+     */
     public static int buscarIndice(String peli, String[] peliculas) 
     {
         int salida = -1;
@@ -345,6 +449,15 @@ public class taller_0 {
         return salida;
     }
     
+    /**
+     * Method that calculates the total purchase of tickets for the customer
+     * @param cantEntradas
+     * @param indPeli
+     * @param estreno
+     * @param estado
+     * @param indRutPeli
+     * @return 
+     */
     public static int calcularCompra(int cantEntradas, int indPeli, String[] estreno, String[] estado, int indRutPeli) 
     {
         int salida=0;
@@ -368,7 +481,27 @@ public class taller_0 {
         return salida;
     }
     
-    public static void confirmarCompra(int[] recaudacion, int[] recaudadoDia, int[][] recaudadoXHorario, int indPeli,String peli ,String hora,String entrada,int cantEntradas, int[] saldo, int indRut, int compra,String[] nombrePelicula,String[] horarioPelicula,String[][] asientosPelicula,int indice) 
+    /**
+     * Method that makes the corresponding changes in the data when the purchase is confirmed
+     * @param recaudacion
+     * @param recaudadoDia
+     * @param recaudadoXHorario
+     * @param indPeli
+     * @param peli
+     * @param hora
+     * @param listaEntradas
+     * @param cantEntradas
+     * @param saldo
+     * @param indRut
+     * @param compra
+     * @param nombrePelicula
+     * @param horarioPelicula
+     * @param asientosPelicula
+     * @param indice
+     * @param salaSelec
+     * @param letras 
+     */
+    public static void confirmarCompra(int[] recaudacion, int[] recaudadoDia, int[][] recaudadoXHorario, int indPeli,String peli ,String hora,String[] listaEntradas,int cantEntradas, int[] saldo, int indRut, int compra,String[] nombrePelicula,String[] horarioPelicula,String[][] asientosPelicula,int indice,int[][] salaSelec,String[] letras) 
     {
         recaudacion[indPeli] += compra;
         recaudadoDia[indPeli] += compra;
@@ -386,10 +519,33 @@ public class taller_0 {
         horarioPelicula[indice] = hora;
         for(int i=0;i<cantEntradas;i++) 
         {
-            asientosPelicula[indice][i] = entrada;
-        }    
+            asientosPelicula[indice][i] = listaEntradas[i];
+            for (int a=0;a<10;a++) 
+            {
+                for (int b=0;b<30;b++) 
+                {
+                    if (listaEntradas[i].equals(letras[a] +"-" + (b+1))) 
+                    {
+                        salaSelec[a][b] = -1;
+                    }
+                }
+            }
+        }
+        
     }
     
+    /**
+     * Method that displays customer information and their inputs
+     * @param indRut
+     * @param nombre
+     * @param apellido
+     * @param rut
+     * @param saldo
+     * @param nombrePelicula
+     * @param horarioPelicula
+     * @param asientosPelicula
+     * @return 
+     */
     public static String informacionCliente(int indRut,String []nombre,String []apellido,String []rut,int []saldo,String[] nombrePelicula,String[] horarioPelicula,String[][] asientosPelicula) 
     {
         String salida = "\n";
@@ -414,6 +570,44 @@ public class taller_0 {
         return salida;
     }
     
+    /**
+     * Method that displays the inputs of a client
+     * @param nombrePelicula
+     * @param horarioPelicula
+     * @param asientosPelicula
+     * @return 
+     */
+    public static String desplegarEntradas(String[] nombrePelicula,String[] horarioPelicula,String[][] asientosPelicula) 
+    {
+        String salida = "\nEntradas: ";
+        
+        for(int a=0;a<nombrePelicula.length;a++) 
+        {
+            if (nombrePelicula[a]!= null) 
+            {
+                salida += "\n- "+nombrePelicula[a] + " con horario de " + horarioPelicula[a] + " con los siguientes asientos:";
+                
+                for(int b=0;b<20;b++) 
+                {
+                    if(asientosPelicula[a][b] != null) 
+                    {
+                        salida += " "+ asientosPelicula[a][b];
+                    }
+                }
+            }
+        }
+        
+        return salida;
+    }
+    
+    /**
+     * Method that displays the total collection, regarding the day and time
+     * @param pelicula
+     * @param recaudacion
+     * @param recaudadoDia
+     * @param recaudadoXHorario
+     * @return 
+     */
     public static String desplegarTaquilla(String[] pelicula,int[] recaudacion,int[] recaudadoDia,int[][] recaudadoXHorario)
     {
         String salida="";
@@ -429,6 +623,93 @@ public class taller_0 {
         
         return salida;
     }
+    
+    /**
+     * Method that calculates the refund regarding the tickets decided by the client
+     * @param cantEntradas
+     * @param indPeli
+     * @param estreno
+     * @param estado
+     * @param indRutPeli
+     * @return 
+     */
+    public static int calculoReembolso(int cantEntradas, int indPeli, String[] estreno, String[] estado, int indRutPeli) 
+    {
+        int salida=0;
+        for(int a=0;a<cantEntradas;a++) 
+        {
+            if (estreno[indPeli].equals("estreno")) 
+            {
+                salida += (5500*0.8);
+            }
+            else 
+            {
+                salida += (4000*0.8);
+            }
+        }        
+        return salida;
+    }
+    
+    /**
+     * Method that confirms the refund and makes the changes to the corresponding data
+     * @param recaudacion
+     * @param recaudadoDia
+     * @param recaudadoXHorario
+     * @param indPeli
+     * @param peli
+     * @param hora
+     * @param listaEntradas
+     * @param cantEntradas
+     * @param saldo
+     * @param indRut
+     * @param reembolso
+     * @param nombrePelicula
+     * @param horarioPelicula
+     * @param asientosPelicula
+     * @param ind
+     * @param salaSelec
+     * @param letras 
+     */
+    public static void confirmarReembolso(int[] recaudacion, int[] recaudadoDia, int[][] recaudadoXHorario, int indPeli,String peli ,String hora,String[] listaEntradas,int cantEntradas, int[] saldo, int indRut, int reembolso,String[] nombrePelicula,String[] horarioPelicula,String[][] asientosPelicula,int ind,int[][] salaSelec,String[] letras) 
+    {
+        recaudacion[indPeli] -= reembolso;
+        recaudadoDia[indPeli] -= reembolso;
+        if (hora.equals("MAÑANA")) 
+        {
+            recaudadoXHorario[0][0] -= reembolso;
+        }
+        else 
+        {
+            recaudadoXHorario[0][1] -= reembolso;
+        }
+        saldo[indRut] += reembolso;
+        
+        int cant=cantEntradas;
+        for(int i=0;i<cantEntradas;i++) 
+        {
+            if (asientosPelicula[ind][i].equals(listaEntradas[i])) 
+            {
+                asientosPelicula[ind][i] = null;
+                cant--;
+            }
+            for (int a=0;a<10;a++) 
+            {
+                for (int b=0;b<30;b++) 
+                {
+                    if (listaEntradas[i].equals(letras[a] +"-" + (b+1))) 
+                    {
+                        salaSelec[a][b] = 1;
+                    }
+                }
+            }
+        }
+        if (cant ==0) 
+        {
+            nombrePelicula[ind] = null;
+            horarioPelicula[ind] = null;
+        }
+
+    }
 
     public static void main(String[] args) throws Exception 
     {
@@ -440,7 +721,7 @@ public class taller_0 {
         String []contraseña= new String[1000];
         int []saldo = new int[1000];
         
-        leerClientes(nombre,apellido,rut,contraseña,saldo);
+        leerClientes(nombre,apellido,rut,contraseña,saldo);        
         
         String[] rutStatus = new String[1000];
         String[] estado = new String[1000];
@@ -609,6 +890,7 @@ public class taller_0 {
                             System.out.print("Ingrese el numero de entradas a comprar: ");
                             int cantEntradas = read.nextInt();
                             String entrada ="";
+                            String[] listaEntradas = new String[cantEntradas];
                             for(int i=0;i<cantEntradas;i++) 
                             {
                                 System.out.print("Ingrese el asiento: ");
@@ -619,6 +901,7 @@ public class taller_0 {
                                     System.out.print("Ingrese el asiento: ");
                                     entrada = read.next().toUpperCase();
                                 }
+                                listaEntradas[i] = entrada;
                                 
                             }
                             int compra = calcularCompra(cantEntradas,indPeli,estreno,estado,indRutPeli);
@@ -626,14 +909,14 @@ public class taller_0 {
                             System.out.print("\nEsta seguro de realizar la compra: ");
                             String respuestaA = read.next().toUpperCase();
                             
-                            while (!respuesta.equals("SI") && !respuesta.equals("NO")) 
+                            while (!respuestaA.equals("SI") && !respuestaA.equals("NO")) 
                             {
                                 System.out.println("\n --- Respuesta Inválida ---\n");
                                 System.out.print("\nEsta seguro de realizar la compra: ");
                                 respuestaA = read.next().toUpperCase();
                             }
                             
-                            if (respuesta.equals("SI")) 
+                            if (respuestaA.equals("SI")) 
                             {
                                 if (saldo[indRut] < compra) 
                                 {
@@ -653,7 +936,7 @@ public class taller_0 {
                                         System.out.print("Ingrese la cantidad a cargar: ");
                                         saldo[indRut] += read.nextInt();
                                         System.out.println("\nSaldo cargado con exito, su nuevo saldo es: $" + saldo[indRut]);
-                                        confirmarCompra(recaudacion,recaudadoDia,recaudadoXHorario,indPeli,peli ,hora,entrada,cantEntradas,saldo,indRut,compra,nombrePelicula,horarioPelicula,asientosPelicula,indice);
+                                        confirmarCompra(recaudacion,recaudadoDia,recaudadoXHorario,indPeli,peli,hora,listaEntradas,cantEntradas,saldo,indRut,compra,nombrePelicula,horarioPelicula,asientosPelicula,indice,salaSelec,letras);
                                         indice++;
                                         System.out.println("\n --- LA COMPRA HA SIDO REALIZADA CON EXITO ---\n");
                                     }
@@ -665,7 +948,7 @@ public class taller_0 {
                                 
                                 else 
                                 {
-                                    confirmarCompra(recaudacion,recaudadoDia,recaudadoXHorario,indPeli,peli ,hora,entrada,cantEntradas,saldo,indRut,compra,nombrePelicula,horarioPelicula,asientosPelicula,indice);
+                                    confirmarCompra(recaudacion,recaudadoDia,recaudadoXHorario,indPeli,peli ,hora,listaEntradas,cantEntradas,saldo,indRut,compra,nombrePelicula,horarioPelicula,asientosPelicula,indice,salaSelec,letras);
                                     indice++;
                                     System.out.println("\n --- LA COMPRA HA SIDO REALIZADA CON EXITO ---\n");
                                 }    
@@ -694,7 +977,57 @@ public class taller_0 {
 
                     else if(op1.equals("c")) 
                     {
-
+                        int indPeli=0;
+                        System.out.println("\n  DEVOLUCIÓN ENTRADA\n");
+                        System.out.println(desplegarEntradas(nombrePelicula,horarioPelicula,asientosPelicula));
+                        System.out.print("Ingrese el nombre de la pelicula: ");
+                        String peli = read.nextLine();
+                        peli = read.nextLine();
+                        
+                        while (buscarIndice(peli,pelicula) == -1) 
+                        {
+                            System.out.println("\n--- El nombre ingresado no se encuentra en cartelera ---\n");
+                            System.out.print("Ingresa el nombre de la pelicula: ");
+                            peli = read.nextLine();
+                        }
+                        indPeli = buscarIndice(peli,pelicula);
+                        
+                        System.out.print("Ingrese la cantidad de entradas que va a reembolsar");
+                        int cantEntradas = read.nextInt();
+                        System.out.print("\nIngrese el numero de la sala: ");
+                        int sala = read.nextInt();
+                        System.out.print("Ingrese el horario de la sala, mañana o tarde: ");
+                        String hora = read.next().toUpperCase();                        
+                        int[][] salaSelec = seleccionar(sala1M,sala1T,sala2M,sala2T,sala3M,sala3T,sala,hora,letras);
+                        String entrada ="";
+                        String[] listaEntradas = new String[cantEntradas];
+                        for(int i=0;i<cantEntradas;i++) 
+                        {
+                            System.out.print("Seleccione los asientos: ");
+                            entrada = read.next().toUpperCase();
+                            while (!comprobarEntrada(entrada,salaSelec,letras))
+                            {
+                                System.out.println("\n--- El asiento ingresado no se encuentra ---\n");
+                                System.out.print("Seleccione los asientos: ");
+                                entrada = read.next().toUpperCase();
+                            }
+                            listaEntradas[i] = entrada;        
+                        }
+                        int indRutPeli = buscarIndice(rutInicio,rutStatus);
+                        int reembolso = calculoReembolso(cantEntradas,indPeli,estreno,estado,indRutPeli);
+                        int ind = buscarIndice(peli,nombrePelicula);
+                        
+                        System.out.print("\nEsta seguro de realizar el reembolso: ");
+                        String respuestaA = read.next().toUpperCase();
+                            
+                        while (!respuestaA.equals("SI") && !respuestaA.equals("NO")) 
+                        {
+                            System.out.println("\n --- Respuesta Inválida ---\n");
+                            System.out.print("\nEsta seguro de realizar el reembolso: ");
+                            respuestaA = read.next().toUpperCase();
+                        }
+                        
+                        confirmarReembolso(recaudacion,recaudadoDia,recaudadoXHorario, indPeli,peli ,hora,listaEntradas,cantEntradas,saldo,indRut,reembolso,nombrePelicula,horarioPelicula,asientosPelicula,ind,salaSelec,letras);
                     }
 
                     else if (op1.equals("d")) 
@@ -747,8 +1080,6 @@ public class taller_0 {
                     
                 }    
             }
-            
-            
             System.out.println("Ha cerrado sesion con exito!");
             System.out.print("Desea cerrar el sistema? (SI) (NO): ");
             respuesta = read.next().toUpperCase();
@@ -761,7 +1092,97 @@ public class taller_0 {
             }
             
         } // FIN DEL CIERRE DE SISTEMA
-        
+        sobrescribirClientes(nombre,apellido,rut,contraseña,saldo);
+        sobrescribirStatus(rutStatus,estado);
+        sobrescribirPeliculas(pelicula,estreno,recaudacion,horario);        
+                
+    } // FIN DEL MAIN
+    
+    /**
+     * Method that overwrites in the text from the lists
+     * @param nombre
+     * @param apellido
+     * @param rut
+     * @param contraseña
+     * @param saldo
+     * @throws IOException 
+     */
+    public static void sobrescribirClientes(String []nombre, String []apellido, String []rut, String []contraseña, int []saldo) throws IOException
+    {
+        FileWriter fw = new FileWriter(new File("clientes.txt"));
+    	for(int i=0;i<nombre.length;i++) 
+        {   
+            if(nombre[i]!= null) 
+            {
+                String texto = nombre[i]+","+apellido[i]+","+rut[i]+","+contraseña[i]+","+saldo[i]+"\n";
+                fw.write(texto);
+            }    
+    	}
+    	
+    	fw.close();
     }
     
+    /**
+     * Method that overwrites in the text from the lists
+     * @param rut
+     * @param estado
+     * @throws IOException 
+     */
+    public static void sobrescribirStatus(String[] rut, String[] estado) throws IOException
+    {
+    	FileWriter fw = new FileWriter(new File("status.txt"));
+    	for(int i=0;i<rut.length;i++) 
+        {
+            if(rut[i] != null)
+            {
+                String texto = rut[i]+","+estado[i]+"\n";
+                fw.write(texto);
+            }    
+    	}
+    	
+    	fw.close();
+    }
+    
+    /**
+     * Method that overwrites in the text from the lists
+     * @param pelicula
+     * @param estreno
+     * @param recaudacion
+     * @param horario
+     * @throws IOException 
+     */
+    public static void sobrescribirPeliculas(String[] pelicula, String[] estreno, int[] recaudacion,String[][] horario) throws IOException
+    {
+    	FileWriter fw = new FileWriter(new File("peliculas.txt"));
+        String texto = "";
+        for(int a=0;a<pelicula.length;a++) 
+        {
+            if(pelicula[a] !=null) 
+            {
+                texto+= pelicula[a]+","+estreno[a]+","+recaudacion[a];
+                
+                for(int f=0;f<3;f++) 
+                {
+                    for(int c=0;c<2;c++) 
+                    {
+                        if(pelicula[a].equals(horario[f][c])) 
+                        {
+                            texto += ","+(f+1);
+                            if(c==0) 
+                            {
+                                texto += ",M";
+                            }
+                            else 
+                            {
+                                texto+= ",T";
+                            }
+                        }
+                    }
+                }
+            }
+            texto +="\n";
+        }
+        fw.write(texto);
+        fw.close();
+    }
 }
