@@ -1179,8 +1179,8 @@ public class taller_0 {
                         }
                     }
                 }
+		texto +="\n";
             }
-            texto +="\n";
         }
         fw.write(texto);
         fw.close();
